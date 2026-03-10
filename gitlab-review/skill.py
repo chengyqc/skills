@@ -132,7 +132,7 @@ async def get_mr_changes(project_id: int, mr_iid: int) -> Optional[Dict[str, Any
     url = f"{GITLAB_API_URL}/projects/{project_id}/merge_requests/{mr_iid}/changes"
     headers = {"PRIVATE-TOKEN": GITLAB_API_TOKEN}
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         try:
             response = await client.get(url, headers=headers, timeout=30.0)
             if response.status_code == 200:
@@ -152,7 +152,7 @@ async def get_commit_diff(project_id: int, commit_id: str) -> Optional[str]:
     url = f"{GITLAB_API_URL}/projects/{project_id}/repository/commits/{commit_id}/diff"
     headers = {"PRIVATE-TOKEN": GITLAB_API_TOKEN}
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         try:
             response = await client.get(url, headers=headers, timeout=30.0)
             if response.status_code == 200:
@@ -263,7 +263,7 @@ async def post_comment_to_gitlab(project_id: int, mr_iid: int, comment: str) -> 
     headers = {"PRIVATE-TOKEN": GITLAB_API_TOKEN}
     data = {"body": comment}
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         try:
             response = await client.post(url, headers=headers, json=data, timeout=10.0)
             if response.status_code in (200, 201):
@@ -284,7 +284,7 @@ async def post_commit_comment(project_id: int, commit_id: str, comment: str) -> 
     headers = {"PRIVATE-TOKEN": GITLAB_API_TOKEN}
     data = {"note": comment}
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         try:
             response = await client.post(url, headers=headers, json=data, timeout=10.0)
             if response.status_code in (200, 201):
